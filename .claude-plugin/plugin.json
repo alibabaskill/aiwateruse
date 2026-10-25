@@ -1,0 +1,20 @@
+{
+  "name": "waterline",
+  "displayName": "Waterline",
+  "version": "1.0.0",
+  "description": "A glass beside your Claude Code session that fills with an estimate of the water each reply used, from a glass up to an Olympic pool. Reads only each turn's token counts and id; makes no network requests.",
+  "author": {
+    "name": "Alistair Sinclaire"
+  },
+  "homepage": "https://github.com/alibabaskill/aiwateruse",
+  "repository": "https://github.com/alibabaskill/aiwateruse",
+  "license": "MIT",
+  "keywords": [
+    "water",
+    "sustainability",
+    "environment",
+    "usage",
+    "tokens"
+  ],
+  "types": "./types/index.d.ts"
+}

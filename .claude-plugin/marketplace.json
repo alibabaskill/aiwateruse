@@ -1,0 +1,13 @@
+{
+  "name": "waterline",
+  "description": "Waterline: a glass beside your Claude Code session that fills with an estimate of the water each reply used.",
+  "owner": {
+    "name": "Alistair Sinclaire"
+  },
+  "plugins": [
+    {
+      "name": "waterline",
+      "source": "./"
+    }
+  ]
+}
