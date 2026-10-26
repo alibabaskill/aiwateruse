@@ -8,6 +8,9 @@
   },
   "homepage": "https://github.com/alibabaskill/aiwateruse",
   "repository": "https://github.com/alibabaskill/aiwateruse",
+  "documentationUrl": "https://github.com/alibabaskill/aiwateruse#readme",
+  "supportUrl": "https://github.com/alibabaskill/aiwateruse/issues",
+  "privacyPolicyUrl": "https://github.com/alibabaskill/aiwateruse/blob/main/PRIVACY.md",
   "license": "MIT",
   "keywords": [
     "water",

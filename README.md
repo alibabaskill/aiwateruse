@@ -65,7 +65,7 @@ You can check this before installing. `claude plugin validate` lists the events 
 > ./register.tsx calls: $.clock.now, $.command.register, $.state.get, $.state.set, $.store.delete (via reset), $.store.get, $.store.set, $.ui.open, $.ui.resolve, $.ui.status (via pour, refreshStatus), $.ui.toast (via pour)
 ```
 
-The `ui.close` hook always lets the panel close and only remembers that you closed it. Claude Code hands every plugin that listens for the end of a turn the turn's final text along with its token counts; Waterline reads only the counts and the turn's id. Only you can reset Waterline or change its settings: another plugin running `/waterline` can only open the panel.
+[PRIVACY.md](PRIVACY.md) sets out what it reads and keeps, and how to delete it. The `ui.close` hook always lets the panel close and only remembers that you closed it. Claude Code hands every plugin that listens for the end of a turn the turn's final text along with its token counts; Waterline reads only the counts and the turn's id. Only you can reset Waterline or change its settings: another plugin running `/waterline` can only open the panel.
 
 ## How the estimate works
 
