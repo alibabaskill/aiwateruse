@@ -15,6 +15,5 @@
     "environment",
     "usage",
     "tokens"
-  ],
-  "types": "./types/index.d.ts"
+  ]
 }

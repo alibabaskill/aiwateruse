@@ -249,8 +249,8 @@ test('odd values in the store are ignored', async ($, on) => {
   engine(on, {
     preset: 'everything',
     allTimeWeightedTokens: 'lots',
-    // As JSON from the store would hold them: "__proto__" as an own key.
-    days: JSON.parse(`{"__proto__": 5, "constructor": 9, "nope": 1, "${dayKey(NOW)}": -3}`),
+    // As JSON from the store would hold them: "__proto__" as an own field.
+    days: { ...JSON.parse('{"__proto__": 5, "constructor": 9, "nope": 1}'), [dayKey(NOW)]: -3 },
   })
   await $.session.start(start)
 

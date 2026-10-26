@@ -145,11 +145,11 @@ export function formatVolume(ml: number): string {
 
 /** "740", "51.2k", "1.3M". */
 export function formatTokens(n: number): string {
-  const tokens = count(n)
-  if (tokens < 1000) return group(tokens)
-  if (tokens < 999_500) return `${trim(tokens / 1000, 1)}k`
+  const total = count(n)
+  if (total < 1000) return group(total)
+  if (total < 999_500) return `${trim(total / 1000, 1)}k`
 
-  return `${trim(tokens / 1_000_000, 1)}M`
+  return `${trim(total / 1_000_000, 1)}M`
 }
 
 /** "half a teaspoon", "a glass", "2.5 glasses", "40 buckets". */
@@ -222,11 +222,11 @@ export function dayKey(ms: number): string {
 }
 
 /** A date that exists, in "2026-10-24" form: 2026-02-30 is turned away. */
-function isDayKey(key: string): boolean {
-  if (!DAY_KEY.test(key)) return false
-  const at = new Date(Number(key.slice(0, 4)), Number(key.slice(5, 7)) - 1, Number(key.slice(8, 10)), 12)
+function isDayKey(day: string): boolean {
+  if (!DAY_KEY.test(day)) return false
+  const at = new Date(Number(day.slice(0, 4)), Number(day.slice(5, 7)) - 1, Number(day.slice(8, 10)), 12)
 
-  return dayKey(at.getTime()) === key
+  return dayKey(at.getTime()) === day
 }
 
 /**
@@ -254,24 +254,24 @@ export function cleanDays(value: unknown, now: number): Record<string, number> {
 /** Adds weighted tokens to a day, keeping only the recent history. */
 export function addToDay(
   days: Record<string, number>,
-  key: string,
+  day: string,
   weighted: number,
   now: number,
 ): Record<string, number> {
-  return cleanDays({ ...days, [key]: count(days[key]) + count(weighted) }, now)
+  return cleanDays({ ...days, [day]: count(days[day]) + count(weighted) }, now)
 }
 
 const WEEKDAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const
 
 /** The last seven days, oldest first, ending today. Noon-anchored, so a clock change never skips a day. */
-export function lastWeek(days: Record<string, number>, now: number): { key: string; label: string; weighted: number }[] {
+export function lastWeek(days: Record<string, number>, now: number): { day: string; label: string; weighted: number }[] {
   const noon = new Date(now)
   noon.setHours(12, 0, 0, 0)
   const week = []
   for (let back = 6; back >= 0; back--) {
     const at = noon.getTime() - back * DAY_MS
-    const key = dayKey(at)
-    week.push({ key, label: WEEKDAY[new Date(at).getDay()] ?? '', weighted: count(days[key]) })
+    const day = dayKey(at)
+    week.push({ day, label: WEEKDAY[new Date(at).getDay()] ?? '', weighted: count(days[day]) })
   }
 
   return week
@@ -485,8 +485,8 @@ export function vesselSvg(
   { size, animate }: { size: number; animate: boolean },
 ): string {
   // Only a known vessel's name ever reaches the markup.
-  const key: VesselId = Object.hasOwn(SHAPES, id) ? id : 'glass'
-  const s = SHAPES[key]
+  const shape: VesselId = Object.hasOwn(SHAPES, id) ? id : 'glass'
+  const s = SHAPES[shape]
   const fill = count(frac)
   const level = levelOf(s, fill)
   const from = levelOf(s, Math.min(count(prevFrac), fill))
@@ -505,9 +505,9 @@ export function vesselSvg(
       ? `<ellipse class="ripple" cx="${s.drop.x}" cy="0" rx="12" ry="2.6" fill="none" stroke="#e6f5ff" stroke-width="1.5"/>`
       : ''
     water =
-      `<g clip-path="url(#wl-in-${key})"><g${pour ? ' class="rise"' : ''}><g transform="translate(0 ${r1(level)})">` +
+      `<g clip-path="url(#wl-in-${shape})"><g${pour ? ' class="rise"' : ''}><g transform="translate(0 ${r1(level)})">` +
       `<g${pour ? ' class="wave"' : ''}>` +
-      `<path d="${wave} L${right} ${depth} L${left} ${depth} Z" fill="url(#wl-water-${key})" fill-opacity=".92"/>` +
+      `<path d="${wave} L${right} ${depth} L${left} ${depth} Z" fill="url(#wl-water-${shape})" fill-opacity=".92"/>` +
       `<path d="${wave}" fill="none" stroke="#d4eeff" stroke-opacity=".85" stroke-width="1.5"/>` +
       `</g>${s.surface ?? ''}${ripple}</g></g></g>`
   }
@@ -532,9 +532,9 @@ export function vesselSvg(
   return (
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="${px}" height="${px}">` +
     style +
-    `<defs><linearGradient id="wl-water-${key}" x1="0" y1="0" x2="0" y2="1">` +
+    `<defs><linearGradient id="wl-water-${shape}" x1="0" y1="0" x2="0" y2="1">` +
     '<stop offset="0" stop-color="#8fd0ff"/><stop offset="1" stop-color="#2a74e0"/></linearGradient>' +
-    `<clipPath id="wl-in-${key}"><path d="${s.inner}"/></clipPath></defs>` +
+    `<clipPath id="wl-in-${shape}"><path d="${s.inner}"/></clipPath></defs>` +
     (s.back ?? '') +
     water +
     s.front +
@@ -677,9 +677,9 @@ export function vesselRaster(
   maxColumns: number,
   maxRows: number,
 ): { columns: number; rows: number; cells: string } {
-  const key: VesselId = Object.hasOwn(SHAPES, id) ? id : 'glass'
-  const s = SHAPES[key]
-  const poly = polygonFor(key)
+  const shape: VesselId = Object.hasOwn(SHAPES, id) ? id : 'glass'
+  const s = SHAPES[shape]
+  const poly = polygonFor(shape)
   const xs = poly.map(p => p[0])
   const ys = poly.map(p => p[1])
   const margin = 5
